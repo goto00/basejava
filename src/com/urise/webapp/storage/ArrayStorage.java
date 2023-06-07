@@ -8,29 +8,28 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private static final int STORAGE_LIMIT = 10000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size;
 
     public void clear() {
-        if (size == 0) {
-            return;
-        }
+//        if (size == 0) {
+////            return;
+////        }
         Arrays.fill(storage, 0, size - 1, null);
         size = 0;
     }
 
     public void save(Resume r) {
-        if (getIndex(r.getUuid()) == -1) {
-            if (size != storage.length) {
-                storage[size] = r;
-                this.size++;
-            } else {
-                System.out.println("ERROR: Storage is full. " +
-                        "Resume with uuid " + r.getUuid() + " wasn't saved.");
-            }
-        } else {
+        if (size >= storage.length) {
+            System.out.println("ERROR: Storage is full. " +
+                    "Resume with uuid " + r.getUuid() + " wasn't saved.");
+        } else if (getIndex(r.getUuid()) >= 0) {
             System.out.println("ERROR: Saving wasn't complete. " +
                     "Resume with uuid " + r.getUuid() + " already presented in the storage");
+        } else {
+            storage[size] = r;
+            size++;
         }
     }
 
