@@ -1,5 +1,8 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.ExistStorageException;
+import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -18,10 +21,8 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index == -1) {
-            System.out.println("ERROR: No results were found. " +
-                    "Resume with uuid \"" + uuid + "\" is not presented in the storage");
-            return null;
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -43,19 +44,16 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index >= 0) {
             storage[index] = r;
         } else {
-            System.out.println("ERROR: Update wasn't complete. " +
-                    "Resume with uuid " + r.getUuid() + " is not presented in the storage");
+            throw new NotExistStorageException(r.getUuid());
         }
     }
 
     public void save(Resume r) {
         int index = getIndex(r.getUuid());
         if (size >= STORAGE_LIMIT) {
-            System.out.println("ERROR: Storage is full. " +
-                    "Resume with uuid " + r.getUuid() + " wasn't saved.");
+            throw new StorageException("Storage is full.", r.getUuid());
         } else if (index >= 0) {
-            System.out.println("ERROR: Saving wasn't complete. " +
-                    "Resume with uuid " + r.getUuid() + " already presented in the storage");
+            throw new ExistStorageException(r.getUuid());
         } else {
             saveResume(r, index);
             size++;
