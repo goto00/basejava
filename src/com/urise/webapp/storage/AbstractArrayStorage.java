@@ -67,7 +67,7 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[size - 1] = null;
             size--;
         } else {
-            System.out.println("ERROR: Resume with uuid " + uuid + " is not presented in the storage");
+            throw new NotExistStorageException(uuid);
         }
     }
 
