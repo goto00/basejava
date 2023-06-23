@@ -11,7 +11,6 @@ import org.junit.Test;
 public abstract class AbstractArrayStorageTest {
 
     private final Storage storage;
-    private static final int STORAGE_LIMIT = 10000;
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
@@ -100,7 +99,7 @@ public abstract class AbstractArrayStorageTest {
     @Test(expected = StorageException.class)
     public void saveWithOverflow() {
         try {
-            while (storage.size() < STORAGE_LIMIT) {
+            while (storage.size() < AbstractArrayStorage.STORAGE_LIMIT) {
                 storage.save(new Resume());
             }
         } catch (Exception e) {
